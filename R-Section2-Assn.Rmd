@@ -8,7 +8,7 @@ output: html_notebook
 ```{r}
 library(readxl)
 library(tidyverse)
-CancerRegistrationEpidemiologyOfColorectalCancerTumours2000_2017 <- read_excel("C:/Users/manpr/Downloads/CancerRegistrationEpidemiologyOfColorectalCancerTumours2000_2017.xlsx",
+CancerRegistrationEpidemiologyOfColorectalCancerTumours2000_2017 <- read_excel("/CancerRegistrationEpidemiologyOfColorectalCancerTumours2000_2017.xlsx",
     sheet = "Data Table")
 # View(CancerRegistrationEpidemiologyOfColorectalCancerTumours2000_2017)
 ```
