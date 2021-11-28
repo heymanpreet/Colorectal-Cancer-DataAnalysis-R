@@ -1,0 +1,133 @@
+---
+title: "R Assn Part 2- Manpreet Chawla"
+output: html_notebook
+---
+
+<!-- Data Import: Import Cancer Dataset to the R Studio and view it -->
+
+```{r}
+library(readxl)
+library(tidyverse)
+CancerRegistrationEpidemiologyOfColorectalCancerTumours2000_2017 <- read_excel("C:/Users/manpr/Downloads/CancerRegistrationEpidemiologyOfColorectalCancerTumours2000_2017.xlsx",
+    sheet = "Data Table")
+# View(CancerRegistrationEpidemiologyOfColorectalCancerTumours2000_2017)
+```
+
+<!-- Data Cleaning: Removing NA Values from DTH_CAUSE_UNDERLYING2 -->
+```{r}
+cancerData <- CancerRegistrationEpidemiologyOfColorectalCancerTumours2000_2017 %>%
+filter(DTH_CAUSE_UNDERLYING2 != 'NA')
+# View(cancerData)
+```
+
+<!-- 3.	Data Exploration Part 1: Cancer Prob across All Age Groups and Genders -->
+
+```{r}
+cancer_data_all_age <- cancerData %>%
+  count(AGE_GROUP,SEX,SITE_GROUP)
+```
+```{r}
+# ggplot(cancer_data_all_age, aes(x=AGE_GROUP, y=n, fill=SEX))+
+#   geom_bar(width = 0.75, stat = "identity")
+ggplot(cancer_data_all_age, aes(x=AGE_GROUP, y=n, fill=AGE_GROUP))+
+  geom_boxplot() + theme_minimal()
+```
+```{r}
+ggplot(cancer_data_all_age, aes(x=AGE_GROUP, y=n, color=SEX))+
+  geom_point() + theme_minimal()
+```
+
+
+<!--  Cancer Prob in All Age Groups and Gender as Male -->
+
+```{r}
+cancer_data_all_age_male <- cancerData %>%
+  filter(SEX == 1)%>%
+  count(AGE_GROUP,SEX,SITE_GROUP)
+```
+```{r}
+# ggplot(cancer_data_all_age_male, aes(x=AGE_GROUP, y=n, fill=SITE_GROUP))+
+#   geom_bar(width = 0.75, stat = "identity")
+ggplot(cancer_data_all_age_male, aes(x=AGE_GROUP, y=n, fill=AGE_GROUP))+
+  geom_boxplot() + theme_minimal() + labs(title ="Colorectal Cancer in Males",y= "TOTAL", x="AGE GROUP")
+```
+
+<!--  Cancer Prob in All Age Groups and Gender as Female -->
+
+```{r}
+cancer_data_all_age_female <- cancerData %>%
+  filter(SEX == 2)%>%
+  count(AGE_GROUP,SEX,SITE_GROUP)
+```
+```{r}
+# ggplot(cancer_data_all_age_male, aes(x=AGE_GROUP, y=n, fill=SITE_GROUP))+
+#   geom_bar(width = 0.75, stat = "identity")
+ggplot(cancer_data_all_age_female, aes(x=AGE_GROUP, y=n, fill=AGE_GROUP))+
+  geom_boxplot() + theme_minimal() + labs(title ="Colorectal Cancer in Females",y= "TOTAL", x="AGE GROUP")
+```
+
+<!-- Data Exploration Part 2: Cancer Site_Group in All Age Groups and Genders  -->
+
+```{r}
+# ggplot(cancer_data_all_age, aes(x=AGE_GROUP, y=n, fill=SITE_GROUP))+
+#   geom_bar(width = 0.75, stat = "identity")
+ggplot(cancer_data_all_age, aes(x=AGE_GROUP, y=n, fill=SITE_GROUP))+
+  geom_boxplot() + theme_minimal() + theme(legend.position="top") + labs(title ="Colorectal Cancer Site Groups",y= "TOTAL", x="AGE GROUP")
+```
+
+<!-- Cancer Site_Group in All Age Groups in Males  -->
+
+```{r}
+ggplot(cancer_data_all_age_male, aes(x=AGE_GROUP, y=n, fill=SITE_GROUP))+
+  geom_bar(width = 0.75, stat = "identity") + theme_minimal() + theme(legend.position="top") + labs(title ="Colorectal Cancer Site Groups Males",y= "TOTAL", x="AGE GROUP")
+# ggplot(cancer_data_all_age_male, aes(x=AGE_GROUP, y=n, fill=SITE_GROUP))+
+#   geom_boxplot() + theme_minimal() + theme(legend.position="top") + labs(title ="Colorectal Cancer Site Groups Males",y= "TOTAL", x="AGE GROUP")
+```
+
+<!-- Cancer Site_Group in All Age Groups in Females  -->
+
+```{r}
+ggplot(cancer_data_all_age_female, aes(x=AGE_GROUP, y=n, fill=SITE_GROUP))+
+  geom_bar(width = 0.75, stat = "identity") + theme_minimal() + theme(legend.position="top") + labs(title ="Colorectal Cancer Site Groups Females",y= "TOTAL", x="AGE GROUP")
+# ggplot(cancer_data_all_age_male, aes(x=AGE_GROUP, y=n, fill=SITE_GROUP))+
+#   geom_boxplot() + theme_minimal()
+```
+
+<!-- Data Exploration Part 3: Death Cause underlying for all age groups and gender  -->
+
+```{r}
+cancer_dth_cause_all <- cancerData %>%
+  filter(DTH_CAUSE_UNDERLYING2 != 'NA')%>%
+  count(AGE_GROUP,DIAGNOSISYEAR,SEX,DTH_CAUSE_UNDERLYING2)
+```
+
+```{r}
+ggplot(cancer_dth_cause_all,aes(x= AGE_GROUP, y= n, fill=DTH_CAUSE_UNDERLYING2)) + geom_boxplot() + theme_minimal() + theme(legend.position="top") + labs(title ="Colorectal Cancer underlying Death Cause",y= "TOTAL", x="AGE GROUP")
+```
+
+<!-- Death Cause underlying for all age groups in Males  -->
+
+```{r}
+cancer_dth_cause_male <- cancerData %>%
+  filter(DTH_CAUSE_UNDERLYING2 != 'NA' & SEX == 1)%>%
+  count(AGE_GROUP,DIAGNOSISYEAR,SEX,DTH_CAUSE_UNDERLYING2)
+```
+
+```{r}
+ggplot(cancer_dth_cause_male,aes(x= AGE_GROUP, y= n, fill=DTH_CAUSE_UNDERLYING2)) + geom_boxplot() + theme_minimal() + theme(legend.position="top") + labs(title ="Colorectal Cancer underlying Death Cause Males",y= "TOTAL", x="AGE GROUP")
+```
+
+<!-- Death Cause underlying for all age groups in Females  -->
+
+```{r}
+cancer_dth_cause_female <- cancerData %>%
+  filter(DTH_CAUSE_UNDERLYING2 != 'NA' & SEX == 2)%>%
+  count(AGE_GROUP,DIAGNOSISYEAR,SEX,DTH_CAUSE_UNDERLYING2)
+```
+
+```{r}
+ggplot(cancer_dth_cause_female,aes(x= AGE_GROUP, y= n, fill=DTH_CAUSE_UNDERLYING2)) + geom_boxplot() + theme_minimal() + theme(legend.position="top") + labs(title ="Colorectal Cancer underlying Death Cause Females",y= "TOTAL", x="AGE GROUP")
+```
+
+
+
